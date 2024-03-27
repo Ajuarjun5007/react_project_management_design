@@ -1,12 +1,21 @@
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { addTaskToList } from '../Slices/tasksSlices';
+import { useDispatch } from 'react-redux';
 const AddTask = () => {
+    const dispatch = useDispatch();
     const [title,setTitle] = useState('');
-    const [description,setDesription]=useState('');
+    const [description,setDescription]=useState('');
     const addTask = (e)=>{
         e.preventDefault();
         console.log({title,description});
+        console.log("add","taask");
+        if(title!='' && description!=''){
+            dispatch(addTaskToList({title,description}));
+        }
+        setTitle('');
+        setDescription('');
     }
   return (
     <div className='my-5'>
@@ -20,7 +29,7 @@ const AddTask = () => {
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Task Description</Form.Label>
         <Form.Control  type="text" value={description} placeholder="Enter Task Description" 
-        onChange={(event)=>setDesription(event.target.value)}  />
+        onChange={(event)=>setDescription(event.target.value)}  />
       </Form.Group>
         <div className="text-end">
       <Button variant="primary" type="submit" onClick={(e)=>addTask(e)}>

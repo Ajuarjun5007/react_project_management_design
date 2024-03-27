@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import MyVerticallyCenteredModal from './UpdateTask';
-MyVerticallyCenteredModal
+import { useSelector,useDispatch } from 'react-redux';
+import { setSelectedTask,removeTaskFromList} from '../Slices/tasksSlices';
 const TasksList = () => {
-    const updateTask = ()=>{
+  const {tasksList} = useSelector((state)=>state.tasks);
+  const dispatch = useDispatch();
+    const updateTask = (task)=>{
         setModalShow(true);
         console.log("updateTask");
+        dispatch(setSelectedTask(task))
     }
-    const deleteTask = ()=>{
+    const deleteTask = (task)=>{
         console.log("deleteTask");
-        
+        dispatch(removeTaskFromList(task))
     }
     const [modalShow,setModalShow]=useState(false);
   return (
@@ -25,13 +29,20 @@ const TasksList = () => {
         </tr>
       </thead>
       <tbody>
-        <tr className='text-center'>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td><Button variant="primary" className='mx-3' onClick={()=>updateTask()}><i className="bi bi-pencil-square"></i></Button>
-          <Button variant="primary" onClick={()=>deleteTask()}><i className="bi bi-trash3"></i></Button></td>
-        </tr>
+        {
+          tasksList && tasksList?.map((task,index)=>{
+            return (
+              <tr className='text-center' key={task?.id}>
+              <td>{index+1}</td>
+              <td>{task?.title}</td>
+              <td>{task?.description}</td>
+              <td><Button variant="primary" className='mx-3' onClick={()=>updateTask(task)}><i className="bi bi-pencil-square"></i></Button>
+              <Button variant="primary" onClick={()=>deleteTask(task)}><i className="bi bi-trash3"></i></Button></td>
+            </tr>
+            )
+          })
+        }
+       
       </tbody>
     </Table>
     <MyVerticallyCenteredModal
